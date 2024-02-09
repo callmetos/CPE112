@@ -1,3 +1,4 @@
+//Channathat Ueanapaphon 66070503413
 #include <stdio.h>
 
 int contains(int element, int array[], int count) {
