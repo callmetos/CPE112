@@ -50,48 +50,61 @@ CharPriority dequeue(PriorityQueue *queue) {
     return result;
 }
 
-char* transform_secret_code(const char *text) {
-    char *result = (char *)malloc(strlen(text) + 1);
-    if (result == NULL) {
+char* transform_secret_code(const char *input_text) {
+    char *result_text = (char *)malloc(strlen(input_text) + 1);
+    if (result_text == NULL) {
         printf("Memory allocation failed.\n");
         return NULL;
     }
     
     PriorityQueue queue = {{0}, 0};
     
-    for (int i = 0; text[i] != '\0'; i++) {
+    for (int i = 0; input_text[i] != '\0'; i++) {
         int priority;
-        if (tolower(text[i]) == 'a' || tolower(text[i]) == 'e' || 
-            tolower(text[i]) == 'i' || tolower(text[i]) == 'o' || 
-            tolower(text[i]) == 'u') {
+        if (tolower(input_text[i]) == 'a' || tolower(input_text[i]) == 'e' || 
+            tolower(input_text[i]) == 'i' || tolower(input_text[i]) == 'o' || 
+            tolower(input_text[i]) == 'u') {
             priority = 3;
-        } else if (isalpha(text[i])) {
+        } else if (isalpha(input_text[i])) {
             priority = 1;
         } else {
             priority = 2;
         }
-        enqueue(&queue, text[i], priority);
+        enqueue(&queue, input_text[i], priority);
     }
 
-    int resultIndex = 0;
+    int result_index = 0;
     while (queue.size > 0) {
         CharPriority item = dequeue(&queue);
-        result[resultIndex++] = item.character;
+        result_text[result_index++] = item.character;
     }
-    result[resultIndex] = '\0';
-    return result;
+    result_text[result_index] = '\0';
+    return result_text;
 }
 
 int main() {
-    char text[MAX_TEXT_LENGTH];
+    char *input_text = (char *)malloc(MAX_TEXT_LENGTH * sizeof(char));
+    if (input_text == NULL) {
+        printf("Memory allocation failed.\n");
+        return 1;
+    }
 
-    fgets(text, MAX_TEXT_LENGTH, stdin);
+    fgets(input_text, MAX_TEXT_LENGTH, stdin);
 
-    char *transformed_text = transform_secret_code(text);
+    input_text[strcspn(input_text, "\n")] = '\0';
+
+    if (strlen(input_text) == 0) {
+        printf("Input text is empty.\n");
+        free(input_text);
+        return 1;
+    }
+
+    char *transformed_text = transform_secret_code(input_text);
     if (transformed_text != NULL) {
         printf("%s\n", transformed_text);
         free(transformed_text);
     }
-
+    
+    free(input_text);
     return 0;
 }
