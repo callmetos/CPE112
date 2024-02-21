@@ -23,6 +23,7 @@ void insertNode(struct CircularLinkedList* list, int data) {
     if (list->head == NULL) {
         list->head = newNode;
         newNode->next = list->head;
+        //O(1)
     } else {
         struct Node* current = list->head;
         while (current->next != list->head) {
@@ -35,7 +36,7 @@ void insertNode(struct CircularLinkedList* list, int data) {
 
 void deleteNode(struct CircularLinkedList* list, int data) {
     if (list->head == NULL) {
-        return;
+        return; //O(1)
     }
 
     struct Node* current = list->head;
@@ -44,7 +45,7 @@ void deleteNode(struct CircularLinkedList* list, int data) {
     do {
         if (current->data == data) {
             if (prev == NULL) {
-
+                //O(n)
                 struct Node* lastNode = list->head;
                 while (lastNode->next != list->head) {
                     lastNode = lastNode->next;
@@ -58,6 +59,7 @@ void deleteNode(struct CircularLinkedList* list, int data) {
                     free(current);
                 }
             } else {
+                //O(1)
                 prev->next = current->next;
                 free(current);
             }
@@ -65,13 +67,14 @@ void deleteNode(struct CircularLinkedList* list, int data) {
         }
         prev = current;
         current = current->next;
-    } while (current != list->head);
+    } while (current != list->head); // O(n) in the worst case
 }
 
 void printList(struct CircularLinkedList* list) {
     if (list->head == NULL) {
         printf("Empty\n");
         return;
+        //O(1) 
     }
 
     struct Node* current = list->head;
@@ -79,7 +82,7 @@ void printList(struct CircularLinkedList* list) {
         printf("%d ", current->data);
         current = current->next;
     } while (current != list->head);
-    printf("\n");
+    printf("\n"); // O(n) over the list
 }
 
 int main() {

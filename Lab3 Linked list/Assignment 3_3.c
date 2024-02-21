@@ -10,7 +10,7 @@ typedef struct ListNode {
 
 ListNode *reverseLinkedList(ListNode *head, int start, int end) {
     if (!head || start == end) {
-        return head;
+        return head; //O(1)
     }
 
     ListNode *prev = NULL;
@@ -19,7 +19,7 @@ ListNode *reverseLinkedList(ListNode *head, int start, int end) {
 
     for (int i = 1; i < start && current; i++) {
         prev = current;
-        current = current->next;
+        current = current->next; //O(1)
     }
 
     ListNode *startNode = prev;
@@ -29,7 +29,7 @@ ListNode *reverseLinkedList(ListNode *head, int start, int end) {
         next = current->next;
         current->next = prev;
         prev = current;
-        current = next;
+        current = next; //O(1)
     }
 
     if (startNode) {
@@ -48,14 +48,14 @@ void printLinkedList(ListNode *head) {
         printf("%d ", head->val);
         head = head->next;
     }
-    printf("\n");
+    printf("\n"); //O(n)
 }
 
 void freeLinkedList(ListNode *head) {
     while (head) {
         ListNode *temp = head;
         head = head->next;
-        free(temp);
+        free(temp); //O(n)
     }
 }
 
