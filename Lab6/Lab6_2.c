@@ -1,3 +1,5 @@
+//Channathat Ueanapaphon 66070503413
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
