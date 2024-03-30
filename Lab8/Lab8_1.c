@@ -3,95 +3,65 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_SIZE 100
-
-int heap[MAX_SIZE];
-int size = 0;
-
-void swap(int *a, int *b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
+void swap(int *arr,int pos,int last) {
+    int t = arr[pos];
+    arr[pos] = arr[last];
+    arr[last] = t;
 }
 
-void heapify_up(int index) {
-    int parent = (index - 1) / 2;
-    if (index > 0 && heap[parent] > heap[index]) {
-        swap(&heap[parent], &heap[index]);
-        heapify_up(parent);
+void heapify(int *arr,int size,int t) {
+    int left = 2*t+1,right = 2*t+2;
+    if(t<0 || arr[t] == -999) return;
+    if(arr[left]<arr[t] && arr[left]!=-999) {
+        swap(arr,left,t);
     }
+    else if(arr[right] < arr[t] && arr[right]!=-999) swap(arr,right,t);
+    if(t%2==0) t=(t-2)/2;
+    else t=(t-1)/2;
+    heapify(arr,size,t);
 }
 
-void insert(int value) {
-    if (size < MAX_SIZE) {
-        heap[size++] = value;
-        heapify_up(size - 1);
-    } else {
-        printf("Heap is full. Cannot insert more elements.\n");
-    }
+void delete(int *arr,int val,int size) {
+    int i=0;
+    while(arr[i] != val) i++;
+    swap(arr,i,size);
+    arr[size] = -999;
 }
 
-void heapify_down(int index) {
-    int smallest = index;
-    int left = 2 * index + 1;
-    int right = 2 * index + 2;
-
-    if (left < size && heap[left] < heap[smallest])
-        smallest = left;
-    if (right < size && heap[right] < heap[smallest])
-        smallest = right;
-
-    if (smallest != index) {
-        swap(&heap[index], &heap[smallest]);
-        heapify_down(smallest);
-    }
-}
-
-void delete(int value) {
-    int i;
-    for (i = 0; i < size; i++) {
-        if (heap[i] == value) {
-            heap[i] = heap[size - 1];
-            size--;
-            heapify_down(i);
-            return;
-        }
-    }
-    printf("Element not found in the heap.\n");
-}
-
-void print_heap() {
-    for (int i = 0; i < size; i++) {
-        printf("%d ", heap[i]);
-    }
-    printf("\n");
-}
 int main() {
-    char operation[10];
-    int value;
-
+    char ch[10];
+    int key,i=0,cnt=0,temp;
+    int tree[1000];
+    while(i!=1000) {
+        tree[i]=-999;
+        i++;
+    }
     while (1) {
-        
-        scanf("%s", operation);
-
-        if (strcmp(operation, "INSERT") == 0) {
-            
-            while (scanf("%d", &value) == 1) {
-                insert(value);
+        scanf("%s", ch);
+        if (strcmp(ch, "INSERT") == 0) {
+            while (scanf("%d", &key) == 1) {
+                tree[cnt] = key;
+                if(cnt%2==0) temp=(cnt-2)/2;
+                else temp=(cnt-1)/2;
+                heapify(tree,cnt,temp);
+                cnt++;
             }
-        } else if (strcmp(operation, "DELETE") == 0) {
-            
-            while (scanf("%d", &value) == 1) {
-                delete(value);
+        } else if (strcmp(ch, "DELETE") == 0) {
+            while (scanf("%d", &key) == 1){
+                cnt--;
+                delete(tree,key,cnt);
+                int pp = (cnt-1)/2;
+                heapify(tree,cnt,pp);
+                pp--;
+                heapify(tree,cnt,pp);
             }
-        } else if (strcmp(operation, "PRINT") == 0) {
-            print_heap();
-        } else if (strcmp(operation, "EXIT") == 0) {
+        } else if (strcmp(ch, "PRINT") == 0) {
+            for(i=0;i<cnt;i++) {
+                printf("%d ",tree[i]);
+            }
+            printf("\n");
+        } else if (strcmp(ch, "EXIT") == 0) {
             break;
-        } else {
-            printf("Invalid operation. Please enter INSERT, DELETE, PRINT, or EXIT.\n");
         }
     }
-
-    return 0;
 }
